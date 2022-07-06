@@ -16,9 +16,12 @@ steps:
   #  - tag
   image: python:3
   environment:
-    TWINE_PASSWORD :
+    TWINE_NON_INTERACTIVE: true
+    TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
+    TWINE_USERNAME: __token__
+    TWINE_PASSWORD:
       from_secret: pypi_token
   commands:
   - python -m pip install --upgrade pip
   - pip install twine
-  - python -m twine upload --non-interactive -u __token__ --repository-url test.pypi.org/legacy/ dist/*
+  - python -m twine upload dist/*
