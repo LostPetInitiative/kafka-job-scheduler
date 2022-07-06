@@ -21,4 +21,4 @@ steps:
   commands:
   - python -m pip install --upgrade pip
   - pip install twine
-  - python twine upload --non-interactive -u __token__ --repository-url test.pypi.org/legacy/ dist/*
+  - python -m twine upload --non-interactive -u __token__ --repository-url test.pypi.org/legacy/ dist/*
