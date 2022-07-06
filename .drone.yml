@@ -11,9 +11,9 @@ steps:
   - pip install build
   - python -m build
 - name: pypi publish
-  #when:
-  #  event:
-  #  - tag
+  when:
+    event:
+    - tag
   image: python:3
   environment:
     TWINE_NON_INTERACTIVE: true
@@ -22,6 +22,7 @@ steps:
     TWINE_PASSWORD:
       from_secret: pypi_token
   commands:
+  - sed -i 's/version = "0.0.0"/version = "${DRONE_TAG}"/' pyproject.toml
   - python -m pip install --upgrade pip
   - pip install twine
   - python -m twine upload dist/*
