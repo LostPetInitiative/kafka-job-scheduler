@@ -7,8 +7,12 @@ steps:
 - name: build
   image: python:3
   commands:
+  - pip install build
   - python -m build
-- name: pypi_publish
+- name: pypi publish
+  #when:
+  #  event:
+  #  - tag
   image: plugins/pypi
   settings:
     repository: https://test.pypi.org/legacy/
