@@ -2,6 +2,10 @@ kind: pipeline
 name: default
 
 steps:
+- name: build
+  image: python:3
+  commands:
+  - pip -m build
 - name: pypi_publish
   image: plugins/pypi
   settings:
