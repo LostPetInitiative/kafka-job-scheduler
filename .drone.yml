@@ -7,7 +7,7 @@ steps:
 - name: build
   image: python:3
   commands:
-  - pip -m build
+  - python -m build
 - name: pypi_publish
   image: plugins/pypi
   settings:
