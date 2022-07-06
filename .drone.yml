@@ -20,7 +20,7 @@ steps:
     TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
     TWINE_USERNAME: __token__
     TWINE_PASSWORD:
-      from_secret: pypi_token
+      from_secret: test_pypi_token
   commands:
   - sed -i 's/version = "0.0.0"/version = "${DRONE_TAG}"/' pyproject.toml
   - python -m pip install --upgrade pip
