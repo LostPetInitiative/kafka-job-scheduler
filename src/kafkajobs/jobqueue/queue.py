@@ -114,6 +114,3 @@ class JobQueueWorker(JobQueue):
 
     def Commit(self):
         self.consumer.commit()
-
-    def Close(self, autocommit=True):
-        self.Close(autocommit)
