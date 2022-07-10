@@ -66,7 +66,8 @@ class JobQueueProducer(JobQueue):
         attempt = 0
         while (not success) and (attempt < 10):
             try:
-                self.producer.send(self.topicName, value=jobBody, key= jobName).get()
+                self.producer.send(self.topicName, value=jobBody, key= jobName)
+                self.producer.flush()
                 success = True
             except kafka.errors.KafkaTimeoutError as err:
                 attempt += 1
