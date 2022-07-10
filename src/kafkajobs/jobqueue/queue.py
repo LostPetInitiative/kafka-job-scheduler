@@ -87,6 +87,7 @@ class JobQueueWorker(JobQueue):
             bootstrap_servers = self.kafkaBootstrapUrl, \
             client_id = self.appName,
             group_id = group_id,
+            auto_offset_reset = "earliest",
             key_deserializer = strDeserializer,
             enable_auto_commit = False,
             max_poll_interval_ms = max_permited_work_time_sec * 1000,
