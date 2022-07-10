@@ -66,7 +66,8 @@ class JobQueueProducer(JobQueue):
         attempt = 0
         while (not success) and (attempt < 10):
             try:
-                self.producer.send(self.topicName, value=jobBody, key= jobName).get()
+                self.producer.send(self.topicName, value=jobBody, key= jobName)
+                self.producer.flush()
                 success = True
             except kafka.errors.KafkaTimeoutError as err:
                 attempt += 1
@@ -86,6 +87,7 @@ class JobQueueWorker(JobQueue):
             bootstrap_servers = self.kafkaBootstrapUrl, \
             client_id = self.appName,
             group_id = group_id,
+            auto_offset_reset = "earliest",
             key_deserializer = strDeserializer,
             enable_auto_commit = False,
             max_poll_interval_ms = max_permited_work_time_sec * 1000,
@@ -114,6 +116,3 @@ class JobQueueWorker(JobQueue):
 
     def Commit(self):
         self.consumer.commit()
-
-    def Close(self, autocommit=True):
-        self.Close(autocommit)
