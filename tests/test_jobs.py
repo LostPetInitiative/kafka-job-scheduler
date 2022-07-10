@@ -1,7 +1,5 @@
 import unittest
 
-from numpy import append
-
 from src.kafkajobs.jobqueue.queue import JobQueueProducer, JobQueueWorker
 
 class TestSum(unittest.TestCase):
