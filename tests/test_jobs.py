@@ -1,6 +1,6 @@
 import unittest
 
-from src.kafkajobs.jobqueue.queue import JobQueueProducer, JobQueueWorker
+from kafkajobs.jobqueue.queue import JobQueueProducer, JobQueueWorker
 
 class TestSum(unittest.TestCase):
     def test_pub_sub(self):
