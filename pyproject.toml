@@ -8,6 +8,14 @@ version = "0.0.0"
 authors = [
   { name="Dmitry Grechka", email="dmitry@kashtanka.pet" },
 ]
+dependencies = [
+  'kafka-python == 2.0.2',
+  'scikit-image == 0.19.3'
+]
+
+[tool.hatch.build.targets]
+packages = ["src/kafkajobs"]
+
 description = "A job queue based on Apache Kafka"
 readme = "README.md"
 license = { file="LICENSE" }
