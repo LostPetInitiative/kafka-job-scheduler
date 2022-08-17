@@ -14,7 +14,7 @@ def imagesNpToStrList(npImages):
         # encoding images
         for npImage in npImages:
             photoPath = os.path.join(tempDir,"{0}.jpeg".format(idx1))
-            io.imsave(photoPath, npImage)
+            io.imsave(photoPath, npImage[:,:,:3]) # discarding alpha channel if any
             #print("image {0} saved".format(photoPath))
             with open(photoPath, 'rb') as photoFile:
                 photo = photoFile.read()

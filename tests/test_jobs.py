@@ -2,7 +2,7 @@ import unittest
 
 from kafkajobs.jobqueue.queue import JobQueueProducer, JobQueueWorker
 
-class TestSum(unittest.TestCase):
+class TestQueues(unittest.TestCase):
     def test_pub_sub(self):
         consumer = JobQueueWorker('test_consumer',kafkaBootstrapUrl='localhost:9092',topicName='test_topic',appName='test_consumer', replication_factor=1)
         producer = JobQueueProducer('localhost:9092', 'test_topic', 'test_producer', replication_factor=1)
