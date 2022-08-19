@@ -1,53 +1,40 @@
-from skimage import io
-import tempfile
-import os
+import imageio.v3 as iio
+import numpy as np
 import base64
-import shutil
 
 
+def imageToRgbImage(image):
+    rank = len(image.shape)
+    if rank == 2:
+        # monochrome
+        # adding color channels
+        return np.stack((image, image, image), axis=2)
+    else:
+        # coloured
+        return image[:,:,:3] # discarding alpha channel if any    
+
+def imageNpToB64SerializedStruct(npImage):
+    rgbNumpyImage = imageToRgbImage(npImage)
+    jpg_encoded_bytes = iio.imwrite("<bytes>", rgbNumpyImage, extension=".jpeg")    
+
+    image = {
+        'type': "jpg",
+        'data': base64.encodebytes(jpg_encoded_bytes).decode("utf-8").replace("\n","")
+    }
+    return image    
 
 def imagesNpToStrList(npImages):
-    tempDir = tempfile.mkdtemp()
-    try:
-        idx1 = 0
-        images = []
-        # encoding images
-        for npImage in npImages:
-            photoPath = os.path.join(tempDir,"{0}.jpeg".format(idx1))
-            io.imsave(photoPath, npImage[:,:,:3]) # discarding alpha channel if any
-            #print("image {0} saved".format(photoPath))
-            with open(photoPath, 'rb') as photoFile:
-                photo = photoFile.read()
-                #print("image {0} read".format(photoPath))
-                image = {
-                    'type': "jpg",
-                    'data': base64.encodebytes(photo).decode("utf-8").replace("\n","")
-                }
-                images.append(image)
-            idx1 += 1
-        return images
-    finally:
-        shutil.rmtree(tempDir)
+    """Obsolete: left for backward compatibility"""
+    return [imageNpToB64SerializedStruct(x) for x in npImages]
+
+def imageB64SerializedStructToNp(b64SerializedStruct):
+    imgType = b64SerializedStruct['type']
+    image_b64 : str = b64SerializedStruct['data']
+    imageData = base64.decodebytes(image_b64.encode("utf-8"))
+    imNumpy = iio.imread(imageData, extension=f".{imgType}")
+    # guard againes old version of encoders
+    return imageToRgbImage(imNumpy)
 
 def imagesFieldToNp(images):
-    tempDir = tempfile.mkdtemp()
-    try:
-        imgIdx = 0
-        imagesNp = []
-        # decoding images
-        for image in images:
-            imgType = image['type']
-            image_b64 : str = image['data']
-            imageData = base64.decodebytes(image_b64.encode("utf-8"))
-            imageFilePath = os.path.join(tempDir,"{0}.{1}".format(imgIdx,imgType))
-            with open(imageFilePath, "wb") as file1:             
-                file1.write(imageData)
-            try:
-                imNumpy = io.imread(imageFilePath)
-                imagesNp.append(imNumpy)
-            except Exception as exc1:
-                print("Error calulating hash for one of the images ({0})".format(exc1))        
-            imgIdx += 1
-        return imagesNp
-    finally:
-        shutil.rmtree(tempDir)
+    """Obsolete: left for backward compatibility"""
+    return [imageB64SerializedStructToNp(x) for x in images]    

@@ -10,7 +10,7 @@ authors = [
 ]
 dependencies = [
   'kafka-python == 2.0.2',
-  'scikit-image == 0.19.3'
+  'imageio == 2.21.1'
 ]
 
 [tool.hatch.build.targets.wheel]
