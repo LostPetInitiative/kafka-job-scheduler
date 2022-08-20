@@ -1,7 +1,6 @@
 import json
-import base64
 import kafka
-import asyncio
+import os
 from kafka.admin import KafkaAdminClient, NewTopic
 
 def strSerializer(jobName):
@@ -21,7 +20,14 @@ def dictDeserializer(jobBytes):
     return json.loads(jobBytes.decode('utf-8'))
 
 class JobQueue:
-    def __init__(self, kafkaBootstrapUrl,topicName, appName, num_partitions=8, replication_factor=3, retentionHours = 7*24):
+    def __init__(self, kafkaBootstrapUrl,topicName, appName, num_partitions=None, replication_factor=None, retentionHours = None):
+        if replication_factor is None:
+            replication_factor = int(os.environ.get('KAFKA_REPLICATION_FACTOR', '1'))
+        if num_partitions is None:
+            num_partitions = int(os.environ.get('KAFKA_NUM_PARTITIONS', '8'))
+        if retentionHours is None:
+            retentionHours = int(os.environ.get('KAFKA_RETENTION_HOURS', '168')) # 168 hours = 1 week
+
         self.kafkaBootstrapUrl = kafkaBootstrapUrl
         self.topicName = topicName
         self.appName = appName
@@ -32,7 +38,7 @@ class JobQueue:
 
         topic_list = []
         topic_configs = {
-            #'log.retention.hours': str(retentionHours)
+            'retention.ms': str(retentionHours*60*60*1000),
         }
         topic_list.append(NewTopic(name=topicName, num_partitions=num_partitions, replication_factor=replication_factor,topic_configs=topic_configs))
         topics = admin_client.list_topics()
