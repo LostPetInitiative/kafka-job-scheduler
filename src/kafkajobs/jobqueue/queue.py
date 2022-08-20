@@ -38,7 +38,7 @@ class JobQueue:
 
         topic_list = []
         topic_configs = {
-            #'log.retention.hours': str(retentionHours)
+            'log.retention.hours': str(retentionHours)
         }
         topic_list.append(NewTopic(name=topicName, num_partitions=num_partitions, replication_factor=replication_factor,topic_configs=topic_configs))
         topics = admin_client.list_topics()
