@@ -9,8 +9,8 @@ authors = [
   { name="Dmitry Grechka", email="dmitry@kashtanka.pet" },
 ]
 dependencies = [
-  'kafka-python == 2.0.2',
-  'imageio == 2.21.1'
+  'kafka-python3 == 3.0.0',
+  'imageio == 2.22.2'
 ]
 
 [tool.hatch.build.targets.wheel]
