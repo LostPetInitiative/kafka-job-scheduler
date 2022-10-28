@@ -1,7 +1,7 @@
 import json
-import kafka
+import kafka3
 import os
-from kafka.admin import KafkaAdminClient, NewTopic
+from kafka3.admin import KafkaAdminClient, NewTopic
 
 def strSerializer(jobName):
     return jobName.encode('utf-8')
@@ -46,7 +46,7 @@ class JobQueue:
             try:
                 admin_client.create_topics(new_topics=topic_list, validate_only=False)
                 print("Topic {0} is created".format(topicName))
-            except kafka.errors.TopicAlreadyExistsError:
+            except kafka3.errors.TopicAlreadyExistsError:
                 print("Topic {0} already exists".format(topicName))
         else:
             print("Topic {0} already exists".format(topicName))
@@ -57,7 +57,7 @@ class JobQueueProducer(JobQueue):
     def __init__(self, *args, **kwargs):
         super(JobQueueProducer, self).__init__(*args, **kwargs)
 
-        self.producer = kafka.KafkaProducer( \
+        self.producer = kafka3.KafkaProducer( \
             bootstrap_servers = self.kafkaBootstrapUrl, \
             client_id = self.appName,
             key_serializer = strSerializer,
@@ -75,7 +75,7 @@ class JobQueueProducer(JobQueue):
                 self.producer.send(self.topicName, value=jobBody, key= jobName)
                 self.producer.flush()
                 success = True
-            except kafka.errors.KafkaTimeoutError as err:
+            except kafka3.errors.KafkaTimeoutError as err:
                 attempt += 1
                 print(f"Error during kafka job message enqueue: {err}. Attempt {attempt}")
         if success:
@@ -89,7 +89,7 @@ class JobQueueWorker(JobQueue):
         super(JobQueueWorker, self).__init__(*args, **kwargs)
 
         self.teardown = False
-        self.consumer = kafka.KafkaConsumer(self.topicName, \
+        self.consumer = kafka3.KafkaConsumer(self.topicName, \
             bootstrap_servers = self.kafkaBootstrapUrl, \
             client_id = self.appName,
             group_id = group_id,
